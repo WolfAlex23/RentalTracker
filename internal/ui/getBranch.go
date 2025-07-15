@@ -8,7 +8,7 @@ import (
 	"github.com/wolfalex23/rental-tracker/internal/data"
 )
 
-var listBranchCmd = &cobra.Command{
+var ListBranchCmd = &cobra.Command{
 	Use:   "listBranch",
 	Short: "Показать информацию о филиале по ID",
 	Long: `
@@ -19,7 +19,7 @@ var listBranchCmd = &cobra.Command{
 			return errors.New("необходимо указать ID филиала")
 		}
 
-		// Выполняем получение филиала по переданному ID
+		// Выполнение получения филиала по переданному ID
 		branch, err := data.GetBranch(args[0]) // Аргумент передается первым элементом массива args
 		if err != nil {
 			return fmt.Errorf("ошибка при получении филиала: %w", err)
@@ -35,6 +35,7 @@ ID: %v
 Площадь: %.2f
 Метры в год: %.2f м²
 Всего в год: %.2f руб.
+Дата изменения: %v 
 `,
 			branch.ID,
 			branch.Department,
@@ -43,6 +44,7 @@ ID: %v
 			branch.Aria,
 			branch.MeterInYear,
 			branch.TotalInYear,
+			branch.UpdatedAt,
 		))
 
 		return nil
@@ -50,5 +52,5 @@ ID: %v
 }
 
 func init() {
-	RootCmd.AddCommand(listBranchCmd)
+	RootCmd.AddCommand(ListBranchCmd)
 }

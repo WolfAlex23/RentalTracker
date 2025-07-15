@@ -7,7 +7,7 @@ import (
 	"github.com/wolfalex23/rental-tracker/internal/data"
 )
 
-var listCmd = &cobra.Command{
+var ListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Показывает список всех филиалов",
 	Long:  "Эта команда выводит подробный список всех зарегистрированных филиалов.",
@@ -48,5 +48,5 @@ ID: %v
 }
 
 func init() {
-	RootCmd.AddCommand(listCmd)
+	RootCmd.AddCommand(ListCmd)
 }

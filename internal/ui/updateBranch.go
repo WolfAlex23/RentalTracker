@@ -9,14 +9,14 @@ import (
 	"github.com/wolfalex23/rental-tracker/internal/model"
 )
 
-var updateCmd = &cobra.Command{
+var UpdateCmd = &cobra.Command{
 	Use:   "update",                     // Имя команды
 	Short: "Обновляет данные о филиале", // Краткое описание
 	Long: `
 Эта команда позволяет обновить данные о филиале по указанным параметрам.
 Используйте флаги для передачи новых значений полей.`,
 	RunE: func(cmd *cobra.Command, _ []string) error {
-		// Получаем значения аргументов
+		// Получение значений аргументов
 		idStr, _ := cmd.Flags().GetString("id")
 		department, _ := cmd.Flags().GetString("department")
 		address, _ := cmd.Flags().GetString("address")
@@ -25,13 +25,13 @@ var updateCmd = &cobra.Command{
 		meterInYearStr, _ := cmd.Flags().GetFloat64("meter-in-year")
 		totalInYearStr, _ := cmd.Flags().GetFloat64("total-in-year")
 
-		// Преобразуем строку с ID в число
+		// Преобразование строки с ID в число
 		id, err := strconv.Atoi(idStr)
 		if err != nil {
 			return fmt.Errorf("невозможно преобразовать ID (%s)", idStr)
 		}
 
-		// Формируем объект Branch
+		// Формиррвание объекта Branch
 		updatedBranch := &model.Branch{
 			ID:          id,
 			Department:  department,
@@ -42,7 +42,7 @@ var updateCmd = &cobra.Command{
 			TotalInYear: totalInYearStr,
 		}
 
-		// Обновляем филиал
+		// Обновление филиала
 		err = data.UpdateBranch(updatedBranch)
 		if err != nil {
 			return err
@@ -55,15 +55,15 @@ var updateCmd = &cobra.Command{
 
 // Регистрация новой команды
 func init() {
-	RootCmd.AddCommand(updateCmd)
+	RootCmd.AddCommand(UpdateCmd)
 
-	// Устанавливаем обязательные и необязательные флаги
-	updateCmd.Flags().StringP("id", "i", "", "Уникальный идентификатор филиала (обязательно)")
-	updateCmd.MarkFlagRequired("id")
-	updateCmd.Flags().StringP("department", "d", "", "Название филиала")
-	updateCmd.Flags().StringP("address", "a", "", "Адрес филиала")
-	updateCmd.Flags().StringP("contract", "c", "", "Контракт филиала")
-	updateCmd.Flags().Float64P("aria", "A", 0, "Занимаемая площадь (опционально)")
-	updateCmd.Flags().Float64P("meter-in-year", "m", 0, "Стоимость метра в год (опционально)")
-	updateCmd.Flags().Float64P("total-in-year", "T", 0, "Общая стоимость в год (опционально)")
+	// Устанавка обязательных и необязательных флагов
+	UpdateCmd.Flags().StringP("id", "i", "", "Уникальный идентификатор филиала (обязательно)")
+	UpdateCmd.MarkFlagRequired("id")
+	UpdateCmd.Flags().StringP("department", "d", "", "Название филиала")
+	UpdateCmd.Flags().StringP("address", "a", "", "Адрес филиала")
+	UpdateCmd.Flags().StringP("contract", "c", "", "Контракт филиала")
+	UpdateCmd.Flags().Float64P("aria", "A", 0, "Занимаемая площадь (опционально)")
+	UpdateCmd.Flags().Float64P("meter-in-year", "m", 0, "Стоимость метра в год (опционально)")
+	UpdateCmd.Flags().Float64P("total-in-year", "T", 0, "Общая стоимость в год (опционально)")
 }

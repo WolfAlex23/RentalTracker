@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// RootCmd - корневая команда интерфейса
 var RootCmd = &cobra.Command{
 	Use:   "rental-tracker",
 	Short: "Приложение для управления информацией об аренде филиалов",

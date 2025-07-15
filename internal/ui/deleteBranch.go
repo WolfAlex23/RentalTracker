@@ -8,7 +8,7 @@ import (
 	"github.com/wolfalex23/rental-tracker/internal/data"
 )
 
-var deleteCmd = &cobra.Command{
+var DeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Удаляет данные о филиале",
 	Long:  "Эта команда полностью удаляет данные филиала по указанному ID.",
@@ -29,5 +29,5 @@ var deleteCmd = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(listCmd)
+	RootCmd.AddCommand(DeleteCmd)
 }

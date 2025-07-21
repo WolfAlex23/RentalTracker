@@ -116,7 +116,7 @@ func GetBranches() ([]*model.Branch, error) {
 	return branches, nil
 }
 
-func GetBranch(id string) (*model.Branch, error) {
+func GetBranch(id int) (*model.Branch, error) {
 
 	branch := &model.Branch{}
 

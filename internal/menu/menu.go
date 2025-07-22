@@ -32,13 +32,13 @@ func MenuLoop() {
 		case 1:
 			handlers.ListHandler()
 		case 2:
-
+			handlers.ListOneHandler()
 		case 3:
 			handlers.AddHandler()
 		case 4:
-
+			handlers.DeleteHandler()
 		case 5:
-
+			handlers.UpdateHandler()
 		case 6:
 			fmt.Println("Работа программы завершена.")
 			return

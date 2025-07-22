@@ -7,8 +7,6 @@ import (
 	"github.com/wolfalex23/rental-tracker/internal/model"
 )
 
-// Вспомогательная функция для удобства чтения строк
-
 func AddHandler() {
 	department := promptUser("Название Филиала: ")
 	address := promptUser("Адрес филиала: ")

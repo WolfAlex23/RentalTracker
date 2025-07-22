@@ -13,15 +13,15 @@ import (
 var db *sql.DB
 
 const schema = `
-CREATE TABLE branches (
+CREATE TABLE IF NOT EXISTS branches (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    department TEXT NOT NULL DEFAULT "",
-    address TEXT NOT NULL DEFAULT "",
-    contract TEXT NOT NULL DEFAULT "",
-	aria DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
-    meterInYear DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
-	totalInYear DECIMAL(10, 2) NOT NULL DEFAULT 0.00
-	updatedAt DATE DEFAULT date('now')
+    department TEXT NOT NULL DEFAULT '',
+    address TEXT NOT NULL DEFAULT '',
+    contract TEXT NOT NULL DEFAULT '',
+    aria DECIMAL(10, 2) NOT NULL DEFAULT '0.00',
+    meterInYear DECIMAL(10, 2) NOT NULL DEFAULT '0.00',
+    totalInYear DECIMAL(10, 2) NOT NULL DEFAULT '0.00',
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX branches_department ON branches(department);
@@ -155,7 +155,7 @@ func UpdateBranch(branch *model.Branch) error {
 	return nil
 }
 
-func DeleteBranch(id string) error {
+func DeleteBranch(id int) error {
 
 	res, err := db.Exec("DELETE FROM branches WHERE id = :id", sql.Named("id", id))
 	if err != nil {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/wolfalex23/rental-tracker/internal/data"
 	"github.com/wolfalex23/rental-tracker/internal/menu"
@@ -12,7 +12,7 @@ func main() {
 
 	err := data.Init(dbPath)
 	if err != nil {
-		log.Fatalf("DB connection failed: %v", err)
+		fmt.Printf("DB connection failed: %v", err)
 
 	}
 

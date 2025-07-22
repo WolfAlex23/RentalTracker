@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/wolfalex23/rental-tracker/internal/model"
 	_ "modernc.org/sqlite"
@@ -12,17 +13,24 @@ import (
 var db *sql.DB
 
 const schema = `
-CREATE TABLE branches (
+CREATE TABLE IF NOT EXISTS branches (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    department TEXT NOT NULL DEFAULT "",
-    address TEXT NOT NULL DEFAULT "",
-    contract TEXT NOT NULL DEFAULT "",
-	aria DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
-    meterInYear DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
-	totalInYear DECIMAL(10, 2) NOT NULL DEFAULT 0.00
+    department TEXT NOT NULL DEFAULT '',
+    address TEXT NOT NULL DEFAULT '',
+    contract TEXT NOT NULL DEFAULT '',
+    aria DECIMAL(10, 2) NOT NULL DEFAULT '0.00',
+    meterInYear DECIMAL(10, 2) NOT NULL DEFAULT '0.00',
+    totalInYear DECIMAL(10, 2) NOT NULL DEFAULT '0.00',
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX branches_department ON branches(department);
+
+CREATE TRIGGER trigger_update_branch_updatedAt
+   AFTER UPDATE ON branches
+   FOR EACH ROW BEGIN
+       UPDATE branches SET updatedAt=date('now') WHERE id=NEW.id;
+   END;
 `
 
 func Init(dbFile string) error {
@@ -58,6 +66,10 @@ func Close() error {
 	return db.Close()
 }
 
+func SetLastUpdated(branch *model.Branch) {
+	branch.UpdatedAt = time.Now().UTC()
+}
+
 func AddBranch(branch *model.Branch) error {
 
 	query := `INSERT INTO branches (department, address, contract, aria, meterInYear, totalInYear) VALUES (:department, :address, :contract, :aria, :meterInYear, :totalInYear)`
@@ -77,7 +89,7 @@ func GetBranches() ([]*model.Branch, error) {
 
 	var query string
 
-	query = "SELECT id, department, address, contract, aria, meterInYear, totalInYear FROM branches ORDER BY department"
+	query = "SELECT id, department, address, contract, aria, meterInYear, totalInYear, updatedAt FROM branches ORDER BY department"
 
 	branches := make([]*model.Branch, 0)
 
@@ -90,7 +102,7 @@ func GetBranches() ([]*model.Branch, error) {
 	for rows.Next() {
 		branch := model.Branch{}
 
-		err := rows.Scan(&branch.ID, &branch.Department, &branch.Address, &branch.Contract, &branch.Aria, &branch.MeterInYear, &branch.TotalInYear)
+		err := rows.Scan(&branch.ID, &branch.Department, &branch.Address, &branch.Contract, &branch.Aria, &branch.MeterInYear, &branch.TotalInYear, &branch.UpdatedAt)
 		if err != nil {
 			return nil, fmt.Errorf("row scan failed: %v", err)
 		}
@@ -104,12 +116,12 @@ func GetBranches() ([]*model.Branch, error) {
 	return branches, nil
 }
 
-func GetBranch(id string) (*model.Branch, error) {
+func GetBranch(id int) (*model.Branch, error) {
 
 	branch := &model.Branch{}
 
-	err := db.QueryRow("SELECT id, department, address, contract, aria, meterInYear, totalInYear FROM branches WHERE id = :id",
-		sql.Named("id", id)).Scan(&branch.ID, &branch.Department, &branch.Address, &branch.Contract, &branch.Aria, &branch.MeterInYear, &branch.TotalInYear)
+	err := db.QueryRow("SELECT id, department, address, contract, aria, meterInYear, totalInYear, updatedAt FROM branches WHERE id = :id",
+		sql.Named("id", id)).Scan(&branch.ID, &branch.Department, &branch.Address, &branch.Contract, &branch.Aria, &branch.MeterInYear, &branch.TotalInYear, &branch.UpdatedAt)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("branch not found")
@@ -143,7 +155,7 @@ func UpdateBranch(branch *model.Branch) error {
 	return nil
 }
 
-func DeleteBranch(id string) error {
+func DeleteBranch(id int) error {
 
 	res, err := db.Exec("DELETE FROM branches WHERE id = :id", sql.Named("id", id))
 	if err != nil {

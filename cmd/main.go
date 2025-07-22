@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/wolfalex23/rental-tracker/internal/data"
-	"github.com/wolfalex23/rental-tracker/internal/ui"
+	"github.com/wolfalex23/rental-tracker/internal/menu"
 )
 
 func main() {
@@ -12,12 +12,10 @@ func main() {
 
 	err := data.Init(dbPath)
 	if err != nil {
-		log.Fatalf("DB connection failed: %v", err)
+		fmt.Printf("DB connection failed: %v", err)
 
 	}
 
 	defer data.Close()
-
-	ui.Execute()
-
+	menu.MenuLoop()
 }

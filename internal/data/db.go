@@ -89,7 +89,7 @@ func GetBranches() ([]*model.Branch, error) {
 
 	var query string
 
-	query = "SELECT id, department, address, contract, aria, meterInYear, totalInYear, updatedAt FROM branches ORDER BY department"
+	query = "SELECT id, department, address, contract, aria, meterInYear, totalInYear, updatedAt FROM branches ORDER BY updatedAt"
 
 	branches := make([]*model.Branch, 0)
 

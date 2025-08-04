@@ -2,21 +2,103 @@ package handlers
 
 import (
 	"fmt"
+	"os"
+
+	"github.com/olekukonko/tablewriter"
+	"github.com/olekukonko/tablewriter/renderer"
+	"github.com/olekukonko/tablewriter/tw"
 
 	"github.com/wolfalex23/rental-tracker/internal/data"
 	"github.com/wolfalex23/rental-tracker/internal/model"
 )
 
 func UpdateHandler() {
-	department := promptUser("Название Филиала: ")
-	address := promptUser("Адрес филиала: ")
-	contract := promptUser("Номер договора: ")
 
-	aria := readPositiveFloat("Площадь м2: ")
-	meterInYear := readPositiveFloat("Стоимость м2 в год: ")
-	totalInYear := readPositiveFloat("Итого в год: ")
+	id, ok := readPositiveInt("Номер филиала ")
+	if !ok {
+		return
+	}
 
-	branch := model.Branch{
+	branch, err := data.GetBranch(id)
+	if err != nil {
+		fmt.Printf("Ошибка при получении инфо филиала: %s\n", err.Error())
+		return
+	}
+	table := tablewriter.NewTable(os.Stdout,
+		tablewriter.WithRenderer(renderer.NewBlueprint(tw.Rendition{
+			Settings: tw.Settings{Separators: tw.Separators{BetweenRows: tw.On}},
+		})))
+
+	// Заголовки таблицы
+	header := []string{"ID", "Department", "Address", "Contract", "Aria", "MeterInYear", "TotalInYear", "UpdatedAt"}
+	table.Header(header)
+
+	var prntBranch [][]string
+
+	prntBranch = append(prntBranch, []string{
+		fmt.Sprint(branch.ID),
+		branch.Department,
+		branch.Address,
+		branch.Contract,
+		fmt.Sprintf("%.2f", branch.Aria),
+		fmt.Sprintf("%.2f", branch.MeterInYear),
+		fmt.Sprintf("%.2f", branch.TotalInYear),
+		branch.UpdatedAt.Format("2006-01-02 15:04:05"),
+	})
+
+	table.Bulk(prntBranch)
+
+	// Рендерим таблицу
+	table.Render()
+
+	if branch == nil {
+		fmt.Println("Филиал отсутствуют.")
+	}
+
+	department, ok := promptUser("Название филиала")
+	if !ok {
+		return
+	} else if department == "" {
+		department = branch.Department
+	}
+
+	address, ok := promptUser("Адрес филиала")
+	if !ok {
+		return
+	} else if address == "" {
+		address = branch.Address
+	}
+
+	contract, ok := promptUser("Номер договора")
+	if !ok {
+		return
+	} else if contract == "" {
+		contract = branch.Contract
+	}
+
+	aria, ok := readPositiveFloat("Площадь м2")
+	if !ok {
+		return
+	} else if aria == 0 {
+		aria = branch.Aria
+	}
+
+	meterInYear, ok := readPositiveFloat("Стоимость м2 в год")
+	if !ok {
+		return
+	} else if meterInYear == 0 {
+		meterInYear = branch.MeterInYear
+	}
+
+	totalInYear, ok := readPositiveFloat("Итого в год")
+	if !ok {
+		return
+	} else if totalInYear == 0 {
+		totalInYear = branch.TotalInYear
+	}
+
+	branch = &model.Branch{
+		ID:          id,
 		Department:  department,
 		Address:     address,
 		Contract:    contract,
@@ -25,7 +107,7 @@ func UpdateHandler() {
 		TotalInYear: totalInYear,
 	}
 
-	err := data.UpdateBranch(&branch)
+	err = data.UpdateBranch(branch)
 	if err != nil {
 		fmt.Printf("Ошибка при обновлении информации о филиале: %v\n", err)
 		return

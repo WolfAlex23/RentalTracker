@@ -8,13 +8,32 @@ import (
 )
 
 func AddHandler() {
-	department := promptUser("Название Филиала: ")
-	address := promptUser("Адрес филиала: ")
-	contract := promptUser("Номер договора: ")
+	department, ok := promptUser("Название филиала")
+	if !ok {
+		return
+	}
 
-	aria := readPositiveFloat("Площадь м2: ")
-	meterInYear := readPositiveFloat("Стоимость м2 в год: ")
-	totalInYear := readPositiveFloat("Итого в год: ")
+	address, ok := promptUser("Адрес филиала")
+	if !ok {
+		return
+	}
+	contract, ok := promptUser("Номер договора")
+	if !ok {
+		return
+	}
+
+	aria, ok := readPositiveFloat("Площадь м2")
+	if !ok {
+		return
+	}
+	meterInYear, ok := readPositiveFloat("Стоимость м2 в год")
+	if !ok {
+		return
+	}
+	totalInYear, ok := readPositiveFloat("Итого в год")
+	if !ok {
+		return
+	}
 
 	branch := model.Branch{
 		Department:  department,

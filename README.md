@@ -22,5 +22,5 @@
 
 Команды для сборки программы: 
 
- Windows: go build -o RentalTracker.exe cmd/main.go
- Linux, macOS: go build -o RentalTracker cmd/main.go
+Windows: go build -o RentalTracker.exe cmd/main.go 
+Linux, macOS: go build -o RentalTracker cmd/main.go

@@ -30,7 +30,7 @@ func UpdateHandler() {
 		})))
 
 	// Заголовки таблицы
-	header := []string{"ID", "Department", "Address", "Contract", "Aria", "MeterInYear", "TotalInYear", "UpdatedAt"}
+	header := []string{"ID", "Филиал", "Адрес", "Договор", "Площадь", "Метров в год", "Всего в год", "Обновлено"}
 	table.Header(header)
 
 	var prntBranch [][]string
@@ -43,7 +43,7 @@ func UpdateHandler() {
 		fmt.Sprintf("%.2f", branch.Aria),
 		fmt.Sprintf("%.2f", branch.MeterInYear),
 		fmt.Sprintf("%.2f", branch.TotalInYear),
-		branch.UpdatedAt.Format("2006-01-02 15:04:05"),
+		branch.UpdatedAt.Format("2006-01-02"),
 	})
 
 	table.Bulk(prntBranch)

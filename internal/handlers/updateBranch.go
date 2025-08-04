@@ -14,7 +14,7 @@ import (
 
 func UpdateHandler() {
 
-	id, ok := readPositiveInt("Номер филиала ")
+	id, ok := readPositiveInt("Номер филиала ", true)
 	if !ok {
 		return
 	}
@@ -55,42 +55,42 @@ func UpdateHandler() {
 		fmt.Println("Филиал отсутствуют.")
 	}
 
-	department, ok := promptUser("Название филиала")
+	department, ok := promptUser("Название филиала", true)
 	if !ok {
 		return
 	} else if department == "" {
 		department = branch.Department
 	}
 
-	address, ok := promptUser("Адрес филиала")
+	address, ok := promptUser("Адрес филиала", true)
 	if !ok {
 		return
 	} else if address == "" {
 		address = branch.Address
 	}
 
-	contract, ok := promptUser("Номер договора")
+	contract, ok := promptUser("Номер договора", true)
 	if !ok {
 		return
 	} else if contract == "" {
 		contract = branch.Contract
 	}
 
-	aria, ok := readPositiveFloat("Площадь м2")
+	aria, ok := readPositiveFloat("Площадь м2", true)
 	if !ok {
 		return
 	} else if aria == 0 {
 		aria = branch.Aria
 	}
 
-	meterInYear, ok := readPositiveFloat("Стоимость м2 в год")
+	meterInYear, ok := readPositiveFloat("Стоимость м2 в год", true)
 	if !ok {
 		return
 	} else if meterInYear == 0 {
 		meterInYear = branch.MeterInYear
 	}
 
-	totalInYear, ok := readPositiveFloat("Итого в год")
+	totalInYear, ok := readPositiveFloat("Итого в год", true)
 	if !ok {
 		return
 	} else if totalInYear == 0 {

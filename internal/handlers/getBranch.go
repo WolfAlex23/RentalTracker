@@ -13,7 +13,7 @@ import (
 
 func ListOneHandler() {
 
-	id, ok := readPositiveInt("Номер филиала ")
+	id, ok := readPositiveInt("Номер филиала ", true)
 	if !ok {
 		return
 	}

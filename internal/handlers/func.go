@@ -10,9 +10,16 @@ import (
 
 // Вспомогательная функция для удобства чтения строк
 
-func promptUser(prompt string) (string, bool) {
+func promptUser(prompt string, showInstruction bool) (string, bool) {
 	for {
-		fmt.Print(prompt + " (или введите 'esc' для выхода; нажмите Enter,чтобы пропустить ввод): ")
+		var fullPrompt string
+		if showInstruction {
+			fullPrompt = prompt + " (или введите 'esc' для выхода; нажмите Enter,чтобы пропустить ввод): "
+		} else {
+			fullPrompt = prompt + ": "
+		}
+
+		fmt.Print(fullPrompt)
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		input := scanner.Text()
@@ -27,9 +34,9 @@ func promptUser(prompt string) (string, bool) {
 
 // Чтение плавающих чисел
 
-func readPositiveFloat(prompt string) (float64, bool) {
+func readPositiveFloat(prompt string, showInstruction bool) (float64, bool) {
 	for {
-		strVal, ok := promptUser(prompt)
+		strVal, ok := promptUser(prompt, showInstruction)
 		if !ok {
 			return 0, false // Вернётся при нажатии ESC, сигнализируя об отмене
 		} else if strVal == "" && ok {
@@ -46,9 +53,9 @@ func readPositiveFloat(prompt string) (float64, bool) {
 	}
 }
 
-func readPositiveInt(prompt string) (int, bool) {
+func readPositiveInt(prompt string, showInstruction bool) (int, bool) {
 	for {
-		strVal, ok := promptUser(prompt)
+		strVal, ok := promptUser(prompt, showInstruction)
 		if !ok {
 			return 0, false // Вернётся при нажатии ESC, сигнализируя об отмене
 		} else if strVal == "" && ok {

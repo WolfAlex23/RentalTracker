@@ -13,7 +13,7 @@ import (
 
 func DeleteHandler() {
 
-	id, ok := readPositiveInt("Номер филиала ")
+	id, ok := readPositiveInt("Номер филиала (или введите 'esc' для выхода)", false)
 	if !ok {
 		return
 	}
@@ -54,15 +54,25 @@ func DeleteHandler() {
 		fmt.Println("Филиал отсутствуют.")
 	}
 
-	yesOrNo, ok := readPositiveInt("Подтверждаете? 1- Да; 2 - Нет")
+	for {
+		yesOrNo, ok := readPositiveInt("Подтверждаете? 1- Да; 2 - Нет (введите 'esc' для выхода)", false)
 
-	if !ok {
-		return
-	}
-	if yesOrNo == 1 {
-		data.DeleteBranch(id)
-	}
-	if yesOrNo == 2 {
-		DeleteHandler()
+		if !ok {
+			return
+		}
+		switch yesOrNo {
+
+		case 1:
+			data.DeleteBranch(id)
+			fmt.Println("Филиал успешно удалён.")
+			return
+		case 2:
+			fmt.Println("Удаление отменено.")
+			DeleteHandler()
+			return
+		default:
+			fmt.Printf("Ошибка при вводе значения. Попробуйте снова.\n")
+			continue
+		}
 	}
 }
